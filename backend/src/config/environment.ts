@@ -30,7 +30,7 @@ export class Environment implements AuthConfig {
     this.sessionSecret = this.required('SESSION_SECRET');
     this.production = process.env.NODE_ENV === 'production';
     this.openRouterApiKey = process.env.OPENROUTER_API_KEY?.trim() ?? '';
-    this.openRouterModel = process.env.OPENROUTER_MODEL?.trim() ?? 'inclusionai/ling-3.0-flash-fin:free';
+    this.openRouterModel = process.env.OPENROUTER_MODEL?.trim() ?? 'nvidia/nemotron-3.5-super-vl:free';
     this.openRouterApiUrl = process.env.OPENROUTER_API_URL?.trim() ?? 'https://openrouter.ai/api/v1/chat/completions';
     this.contextsDirectory = path.resolve(process.cwd(), process.env.CONTEXTS_DIRECTORY?.trim() || 'src/contexts');
     this.validate();
