@@ -9,7 +9,12 @@ interface ChatScreenProps {
   onSessionExpired: () => void;
 }
 
-interface ChatMessage { id: string; author: 'assistant' | 'user'; text: string; }
+interface ChatMessage {
+  id: string;
+  author: 'assistant' | 'user';
+  text: string;
+  sources?: Array<{ title: string; url: string }>;
+}
 
 interface ChatScreenState {
   text: string;
@@ -36,7 +41,7 @@ export class ChatScreen extends Component<ChatScreenProps, ChatScreenState> {
   private interimTranscript = '';
   public state: ChatScreenState = {
     text: '', recording: false, sending: false,
-    messages: [{ id: 'welcome', author: 'assistant', text: 'Olá! Posso criar eventos na sua agenda. Diga ou escreva o que você precisa.' }],
+    messages: [{ id: 'welcome', author: 'assistant', text: 'Olá! Posso cuidar da sua agenda, buscar e-mails e pesquisar na web com o Google.' }],
   };
 
   public componentWillUnmount(): void { this.recognition?.abort(); }
@@ -64,13 +69,13 @@ export class ChatScreen extends Component<ChatScreenProps, ChatScreenState> {
   }
 
   private receiveResult(result: CommandResponse): void {
-    this.addAssistantMessage(result.message);
-    if (result.action === 'created') this.props.onEventsChanged();
+    this.addAssistantMessage(result.message, result.sources);
+    if (['created', 'updated', 'removed', 'alerted'].includes(result.action)) this.props.onEventsChanged();
   }
 
-  private addAssistantMessage(text: string): void {
+  private addAssistantMessage(text: string, sources?: Array<{ title: string; url: string }>): void {
     this.setState(function append(current) {
-      return { messages: [...current.messages, { id: crypto.randomUUID(), author: 'assistant', text }] };
+      return { messages: [...current.messages, { id: crypto.randomUUID(), author: 'assistant', text, ...(sources ? { sources } : {}) }] };
     });
   }
 
@@ -126,8 +131,21 @@ export class ChatScreen extends Component<ChatScreenProps, ChatScreenState> {
       </header>
       <div className="flex flex-1 flex-col gap-3 py-7" aria-live="polite">
         {messages.map(function message(item) {
-          return <article key={item.id} className={`max-w-[88%] rounded-2xl px-4 py-3 text-sm leading-6 ${item.author === 'user' ? 'ml-auto bg-ink text-white' : 'bg-white text-ink shadow-[0_6px_20px_rgba(20,54,45,0.05)]'}`}>{item.text}</article>;
+          return <article key={item.id} className={`max-w-[88%] whitespace-pre-line rounded-2xl px-4 py-3 text-sm leading-6 ${item.author === 'user' ? 'ml-auto bg-ink text-white' : 'bg-white text-ink shadow-[0_6px_20px_rgba(20,54,45,0.05)]'}`}>
+            {item.text}
+            {item.sources?.length ? <ul className="mt-3 space-y-1 border-t border-ink/10 pt-2 text-xs">
+              {item.sources.map(function source(item) {
+                return <li key={item.url}><a href={item.url} target="_blank" rel="noreferrer" className="text-ink underline underline-offset-2">{item.title}</a></li>;
+              })}
+            </ul> : null}
+          </article>;
         })}
+        {messages.length === 1 && <div className="flex flex-wrap gap-2 pt-1" aria-label="Sugestões de comando">
+          {this.quickActions().map(function action(this: ChatScreen, item) {
+            return <button key={item.label} type="button" onClick={this.prepareCommand.bind(this, item.text)} disabled={sending || recording}
+              className="rounded-full border border-ink/10 bg-white px-3 py-2 text-xs text-ink hover:border-ink/30 disabled:opacity-50">{item.label}</button>;
+          }, this)}
+        </div>}
         {sending && <p className="flex items-center gap-2 text-xs text-muted"><LoaderCircle size={15} className="animate-spin" /> Charles está organizando sua agenda…</p>}
       </div>
       <form className="sticky bottom-0 flex gap-2 border-t border-ink/10 bg-paper py-4" onSubmit={this.submit.bind(this)}>
@@ -144,4 +162,15 @@ export class ChatScreen extends Component<ChatScreenProps, ChatScreenState> {
   }
 
   private changeText(event: React.ChangeEvent<HTMLInputElement>): void { this.setState({ text: event.target.value }); }
+  private prepareCommand(text: string): void { this.setState({ text }); }
+  private quickActions(): Array<{ label: string; text: string }> {
+    return [
+      { label: 'Criar evento', text: 'Agende uma reunião amanhã às 14h' },
+      { label: 'Atualizar evento', text: 'Mude minha reunião de amanhã para 15h' },
+      { label: 'Remover evento', text: 'Remova minha reunião de amanhã' },
+      { label: 'Criar alerta', text: 'Me alerte 30 minutos antes da minha reunião de amanhã' },
+      { label: 'Buscar e-mails', text: 'Busque e-mails sobre orçamento' },
+      { label: 'Pesquisar na web', text: 'Pesquise no Google as principais notícias de hoje sobre inteligência artificial' },
+    ];
+  }
 }

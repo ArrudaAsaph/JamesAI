@@ -95,6 +95,7 @@ export class AuditLogService {
     if (path === '/auth/me') return 'auth.session.checked';
     if (path === '/calendar/events') return 'calendar.events.listed';
     if (path === '/commands') return 'command.executed';
+    if (path === '/emails/search') return 'email.search.executed';
     return 'http.request.completed';
   }
 

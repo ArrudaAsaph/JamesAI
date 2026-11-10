@@ -11,10 +11,15 @@ export class ApiService {
 
   private async request<T>(path: string, init?: RequestInit): Promise<T> {
     let response: Response;
+    const timeout = AbortSignal.timeout(path === '/commands' ? 45_000 : 15_000);
+    const signal = init?.signal ? AbortSignal.any([init.signal, timeout]) : timeout;
     try {
-      response = await fetch('/api' + path, { ...init, credentials: 'include', cache: 'no-store' });
+      response = await fetch('/api' + path, { ...init, signal, credentials: 'include', cache: 'no-store' });
     } catch (error) {
       if (error instanceof Error && error.name === 'AbortError') throw error;
+      if (error instanceof Error && error.name === 'TimeoutError') throw new ApiError(
+        path === '/commands' ? 'A solicitação demorou demais. Confira sua agenda antes de tentar novamente.' : 'A solicitação demorou demais. Tente novamente.',
+        504, 'REQUEST_TIMEOUT');
       throw new ApiError('Não foi possível conectar. Verifique sua conexão e tente novamente.', 0);
     }
     if (!response.ok) {

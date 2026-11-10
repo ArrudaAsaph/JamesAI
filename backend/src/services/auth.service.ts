@@ -37,6 +37,7 @@ export class AuthService {
         'email',
         'profile',
         'https://www.googleapis.com/auth/calendar.events',
+        'https://www.googleapis.com/auth/gmail.readonly',
       ],
     };
     return this.passport.authenticate('google', options, callback);

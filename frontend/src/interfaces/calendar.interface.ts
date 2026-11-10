@@ -26,14 +26,16 @@ export interface EventsResponse {
 
 export interface CommandResponse {
   text: string;
-  context: { id: 'calendar' } | null;
+  context: { id: 'calendar' | 'email' | 'web' } | null;
   interpretation: {
     intent: 'create' | 'update' | 'query' | 'cancel' | 'unknown';
     event: string | null;
     date: string | null;
     time: string | null;
   } | null;
-  action: 'created' | 'interpreted' | 'not_understood';
+  action: 'created' | 'updated' | 'removed' | 'alerted' | 'searched' | 'interpreted' | 'not_understood';
   message: string;
   event?: CalendarEvent;
+  emails?: Array<{ id: string; subject: string; from: string; date: string; snippet: string; summary?: string }>;
+  sources?: Array<{ title: string; url: string }>;
 }

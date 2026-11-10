@@ -146,6 +146,27 @@ Configure `OPENROUTER_API_KEY` e, opcionalmente, `OPENROUTER_MODEL`, `OPENROUTER
 `CONTEXTS_DIRECTORY` no `.env`. O corpo do comando não entra na auditoria; a requisição gera o
 evento auditável `command.executed` com usuário, status e identificador da requisição.
 
+O chat entende criação, alteração, remoção e alertas de eventos. Exemplos: “mude a reunião de
+amanhã para 15h”, “remova meu dentista na sexta” e “me alerte 30 minutos antes da reunião”.
+
+## Pesquisa na web com Gemini e Google Search
+
+Configure `GEMINI_API_KEY` no `.env` com uma chave criada no Google AI Studio. Opcionalmente,
+configure `GEMINI_MODEL` (padrão `gemini-3.8-flash`). Pedidos como “pesquise no Google sobre ...”
+seguem diretamente para a Gemini API com a ferramenta Google Search habilitada; essa rota não usa
+o OpenRouter. O chat mostra a síntese do Gemini e os links de fontes retornados pelo grounding.
+Veja a [documentação oficial de Grounding com Google Search](https://ai.google.dev/gemini-api/docs/google-search).
+
+## Busca no Gmail
+
+Ative a **Gmail API** no projeto Google Cloud. O endpoint autenticado
+`GET /emails/search?q=consulta&maxResults=10` devolve assunto, remetente, data e trecho dos e-mails
+encontrados. O chat também interpreta pedidos como “busque e-mails da Ana” e apresenta os resultados.
+
+O login agora solicita o escopo `gmail.readonly`. Cada usuário deve entrar novamente pelo
+`/auth/google?client=web` e aceitar a nova permissão antes de usar a busca. Consultas de e-mail são
+auditadas como `email.search.executed`; valores da busca não entram no log de auditoria.
+
 ## Frontend e logout
 
 O aplicativo Next.js está em `../frontend`, disponível em `http://localhost:3002`.

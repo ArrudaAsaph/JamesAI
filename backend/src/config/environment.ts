@@ -16,6 +16,8 @@ export class Environment implements AuthConfig {
   public readonly openRouterApiKey: string;
   public readonly openRouterModel: string;
   public readonly openRouterApiUrl: string;
+  public readonly geminiApiKey: string;
+  public readonly geminiModel: string;
   public readonly contextsDirectory: string;
 
   constructor() {
@@ -32,6 +34,8 @@ export class Environment implements AuthConfig {
     this.openRouterApiKey = process.env.OPENROUTER_API_KEY?.trim() ?? '';
     this.openRouterModel = process.env.OPENROUTER_MODEL?.trim() ?? 'nvidia/nemotron-3.5-super-vl:free';
     this.openRouterApiUrl = process.env.OPENROUTER_API_URL?.trim() ?? 'https://openrouter.ai/api/v1/chat/completions';
+    this.geminiApiKey = process.env.GEMINI_API_KEY?.trim() ?? '';
+    this.geminiModel = process.env.GEMINI_MODEL?.trim() || 'gemini-3.8-flash';
     this.contextsDirectory = path.resolve(process.cwd(), process.env.CONTEXTS_DIRECTORY?.trim() || 'src/contexts');
     this.validate();
   }

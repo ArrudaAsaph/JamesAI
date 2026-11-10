@@ -19,6 +19,16 @@ export interface CalendarEventInput {
   location?: string;
   start: string;
   end: string;
+  reminderMinutes?: number;
+}
+
+export interface CalendarEventUpdate {
+  summary?: string;
+  description?: string;
+  location?: string;
+  start?: string;
+  end?: string;
+  reminderMinutes?: number;
 }
 
 export interface CalendarEvents {

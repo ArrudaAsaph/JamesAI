@@ -14,6 +14,10 @@ import { AuditLogService } from './services/audit-log.service.js';
 import { CommandService } from './services/command.service.js';
 import { CommandController } from './controllers/command.controller.js';
 import { CommandRouter } from './routes/command.router.js';
+import { GmailService } from './services/gmail.service.js';
+import { EmailController } from './controllers/email.controller.js';
+import { EmailRouter } from './routes/email.router.js';
+import { GeminiSearchService } from './services/gemini-search.service.js';
 import express from 'express';
 import type { Request, Response, NextFunction } from 'express';
 import session from 'express-session';
@@ -37,10 +41,14 @@ export class App {
     const users = new UserRepository(this.database);
     const tokens = new GoogleTokenRepository(this.database, new TokenCipherService(config.tokenEncryptionKey));
     const authService = new AuthService(config, users, tokens);
-    const calendarService = new CalendarService(new GoogleTokenService(config, tokens));
+    const googleTokens = new GoogleTokenService(config, tokens);
+    const calendarService = new CalendarService(googleTokens);
     const authMiddleware = new AuthMiddleware();
     const calendarRouter = new CalendarRouter(new CalendarController(calendarService), authMiddleware);
-    const commandRouter = new CommandRouter(new CommandController(new CommandService(config, calendarService)), authMiddleware);
+    const gmailService = new GmailService(googleTokens);
+    const geminiSearch = new GeminiSearchService(config.geminiApiKey ?? '', config.geminiModel ?? 'gemini-3.8-flash');
+    const commandRouter = new CommandRouter(new CommandController(new CommandService(config, calendarService, gmailService, geminiSearch)), authMiddleware);
+    const emailRouter = new EmailRouter(new EmailController(gmailService), authMiddleware);
     const authController = new AuthController(authService, config);
     const authRouter = new AuthRouter(authController, new AuthMiddleware());
     this.app.disable('x-powered-by');
@@ -67,6 +75,7 @@ export class App {
     this.app.use('/auth', authRouter.router);
     this.app.use('/calendar', calendarRouter.router);
     this.app.use('/commands', commandRouter.router);
+    this.app.use('/emails', emailRouter.router);
 
     this.app.use(this.handleError.bind(this));
   }

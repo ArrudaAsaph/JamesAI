@@ -1,6 +1,6 @@
 import type { CalendarEvent } from './calendar.interface.js';
 
-export type CalendarIntent = 'create' | 'update' | 'query' | 'cancel' | 'unknown';
+export type CalendarIntent = 'create' | 'update' | 'alert' | 'query' | 'cancel' | 'unknown';
 
 export interface CalendarInterpretation {
   intent: CalendarIntent;
@@ -10,6 +10,8 @@ export interface CalendarInterpretation {
   duration_minutes?: number | null;
   description?: string | null;
   location?: string | null;
+  new_event?: string | null;
+  reminder_minutes?: number | null;
 }
 
 export interface CalendarEventInput {
@@ -18,13 +20,16 @@ export interface CalendarEventInput {
   end: string;
   description?: string;
   location?: string;
+  reminderMinutes?: number;
 }
 
 export interface CommandResult {
   text: string;
-  context: { id: 'calendar' } | null;
+  context: { id: 'calendar' | 'email' | 'web' } | null;
   interpretation: CalendarInterpretation | null;
-  action: 'created' | 'interpreted' | 'not_understood';
+  action: 'created' | 'updated' | 'removed' | 'alerted' | 'searched' | 'interpreted' | 'not_understood';
   message: string;
   event?: CalendarEvent;
+  emails?: Array<{ id: string; subject: string; from: string; date: string; snippet: string; summary?: string }>;
+  sources?: Array<{ title: string; url: string }>;
 }

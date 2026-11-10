@@ -19,6 +19,8 @@ export interface AuthConfig {
   openRouterApiKey?: string;
   openRouterModel?: string;
   openRouterApiUrl?: string;
+  geminiApiKey?: string;
+  geminiModel?: string;
   contextsDirectory?: string;
 }
 
