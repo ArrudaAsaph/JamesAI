@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>James: apresentação do TCC</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=DM+Sans:wght@400;500;700&display=swap">
+<style>
+:root{--m:#00D09E;--b:#3299FF;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{background:#0B2239;font:400 clamp(.95rem,1.45vw,1.2rem)/1.5 "DM Sans",system-ui,sans-serif;overflow:hidden}
+.deck{position:relative;height:100%}
+.s{--bg:#fff;--ink:#0B2239;--mut:#52687D;--card:#fff;--ln:#DCE7EF;--sh:0 12px 32px rgba(11,34,57,.07);--sb:#1F7BE0;
+position:absolute;inset:0;display:flex;flex-direction:column;gap:2.4vh;padding:12vh 7vw 12vh;color:var(--ink);overflow:auto;opacity:0;visibility:hidden;transform:translateX(54px);transition:opacity .55s,transform .55s,visibility 0s .55s;
+background:radial-gradient(34vw 34vw at 100% 100%,rgba(0,208,158,.17),transparent 70%),radial-gradient(28vw 28vw at 100% 0,rgba(50,153,255,.13),transparent 70%),var(--bg)}
+.s.on{opacity:1;visibility:visible;transform:none;transition:opacity .55s,transform .55s}
+.s.out{transform:translateX(-54px)}
+.d{--bg:#0B2239;--ink:#EAF2F8;--mut:#A3B8CC;--card:rgba(255,255,255,.06);--ln:rgba(255,255,255,.16);--sh:none;--sb:var(--m)}
+.hero{background:radial-gradient(44vw 44vw at 92% 8%,rgba(50,153,255,.55),transparent 70%),radial-gradient(40vw 40vw at 0 100%,rgba(0,208,158,.42),transparent 70%),#0B2239;justify-content:center}
+h1,h2,h3{font-family:Sora,system-ui,sans-serif;margin:0;letter-spacing:-.02em}
+h1{font-size:clamp(1.8rem,4.4vw,3.6rem);line-height:1.12;max-width:24ch}
+h2{font-size:clamp(2rem,4.8vw,3.9rem);line-height:1.05}
+h3{font-size:1.08em;line-height:1.25;margin-bottom:.5em}
+.sb{margin:.3em 0 0;font:600 clamp(1.1rem,2.2vw,1.8rem)/1.2 Sora,sans-serif;color:var(--sb)}
+.kk{margin:0 0 1.5vh;font:600 clamp(1rem,1.8vw,1.5rem) Sora,sans-serif;color:var(--m)}
+.bd{flex:1;display:flex;flex-direction:column;justify-content:center;gap:2.6vh;min-height:0}
+p{margin:0;max-width:64ch}.mut{color:var(--mut)}
+.bar{width:84px;height:6px;border-radius:3px;background:linear-gradient(90deg,var(--m),var(--b))}
+.r{animation:up .6s calc(var(--i,0)*.1s + .2s) backwards cubic-bezier(.2,.8,.2,1)}
+.s:not(.on) .r{animation:none}
+@keyframes up{from{opacity:0;transform:translateY(16px)}}
+#lg{position:fixed;top:calc(env(safe-area-inset-top,0px) + 2.2vh);right:3vw;z-index:6;height:clamp(46px,9vh,80px);padding:.7vh .9vw;background:#fff;border-radius:16px;box-shadow:0 8px 26px rgba(11,34,57,.18)}
+#lg img{height:100%;display:block}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:2.4vh 1.8vw}
+.c{position:relative;background:var(--card);border:1px solid var(--ln);border-radius:20px;padding:3vh 1.6vw 2.4vh;box-shadow:var(--sh);overflow:hidden}
+.c::before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:var(--m)}
+.c:nth-child(2n)::before{background:var(--b)}
+.c p{color:var(--mut);font-size:.95em}
+.nm{display:grid;place-items:center;width:2.1em;height:2.1em;border-radius:50%;background:linear-gradient(135deg,var(--m),var(--b));color:#06223A;font:700 .95em Sora,sans-serif;margin-bottom:1.2vh}
+ul.l{list-style:none;margin:0;padding:0;display:grid;gap:1.8vh}
+ul.l li{position:relative;padding:1.6vh 1.2vw 1.6vh 3em;background:var(--card);border:1px solid var(--ln);border-radius:16px;box-shadow:var(--sh)}
+ul.l li::before{content:"→";position:absolute;left:1.1em;color:var(--b);font-weight:700}
+.d ul.l li::before{color:var(--m)}
+ul.mi{margin:0;padding-left:1.1em;color:var(--mut);font-size:.95em;display:grid;gap:.5vh}
+.q{font:500 clamp(1.15rem,2.2vw,1.8rem)/1.4 "DM Sans",sans-serif;border-left:8px solid var(--m);padding:1.6vh 0 1.6vh 2vw;max-width:46ch;border-image:linear-gradient(var(--m),var(--b)) 1}
+.toc{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:2vh 2vw}
+.toc div{display:flex;align-items:center;gap:1em;font:600 1.1em Sora,sans-serif}
+.toc b{display:grid;place-items:center;flex:none;width:2.5em;height:2.5em;border-radius:50%;background:linear-gradient(135deg,var(--m),var(--b));color:#06223A;font-size:.9em}
+.grp{display:grid;grid-template-columns:minmax(120px,170px) 1fr;gap:1vh 1.6vw;align-items:center;border-bottom:1px solid var(--ln);padding-bottom:1.4vh}
+.grp>span{font:600 .9em Sora,sans-serif;color:var(--sb)}
+.ch{display:flex;flex-wrap:wrap;gap:.8vh .7vw}
+.ch i{font-style:normal;background:var(--card);border:1px solid var(--ln);border-radius:99px;padding:.2em .9em;font-size:.9em;box-shadow:var(--sh)}
+.ch i:nth-child(3n+1){border-color:var(--m)}.ch i:nth-child(3n+2){border-color:var(--b)}
+.flow{display:flex;flex-wrap:wrap;gap:1vh 0}
+.n{flex:1 1 120px;min-width:110px;background:var(--card);border:2px solid var(--ln);border-radius:16px;padding:1.6vh 1vw;margin-right:1.6vw;position:relative;font-size:.85em;line-height:1.3;box-shadow:var(--sh);animation:wv 7s infinite;animation-delay:calc(var(--i)*1s)}
+.n b{display:block;font:700 1.15em Sora,sans-serif}
+.n::after{content:"";position:absolute;right:-1.6vw;top:50%;width:1.6vw;height:3px;background:linear-gradient(90deg,var(--m),var(--b))}
+.n:last-child::after{display:none}
+.n.mo{border-color:var(--b)}
+@keyframes wv{0%,12%{border-color:var(--m);transform:translateY(-7px);box-shadow:0 14px 30px rgba(0,208,158,.3)}22%,100%{transform:none}}
+.lg{display:flex;gap:2.4vw;flex-wrap:wrap;font-size:.9em;color:var(--mut)}
+.lg i{display:inline-block;width:.8em;height:.8em;border-radius:4px;margin-right:.45em}
+.st{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));gap:2vh 1.4vw;counter-reset:s}
+.st div{position:relative;padding-top:1.6em}
+.st div::before{counter-increment:s;content:counter(s);position:absolute;top:-.2em;left:0;width:2.2em;height:2.2em;display:grid;place-items:center;border-radius:50%;background:linear-gradient(135deg,var(--m),var(--b));color:#06223A;font:700 .9em Sora,sans-serif}
+.st div::after{content:"";position:absolute;top:.85em;left:2.4em;right:.4em;height:2px;background:var(--ln)}
+.st div:last-child::after{display:none}
+.st h3{margin-top:1.4em}.st p{font-size:.9em;color:var(--mut)}
+.two{display:grid;grid-template-columns:1.1fr 1fr;gap:3vw;align-items:center}
+.chk{list-style:none;margin:0;padding:0;display:grid;gap:1.4vh}
+.chk li{padding-left:1.9em;position:relative}
+.chk li::before{content:"✓";position:absolute;left:0;color:var(--m);font-weight:700}
+.stop{display:inline-block;margin-top:1.2vh;padding:.2em .8em;border-radius:99px;background:#E2563F;color:#fff;font-weight:700;font-size:.85em}
+.big{font:700 clamp(4rem,12vw,9rem)/.95 Sora,sans-serif;color:var(--sb)}
+.big small{font-size:.4em;color:var(--mut)}
+.pad{display:grid;grid-template-columns:auto 1fr;gap:4vw;align-items:center}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:.4vh 2.2vw}
+.row{display:flex;justify-content:space-between;align-items:center;gap:.8em;font-size:.82em;border-bottom:1px solid var(--ln);padding:.45vh 0}
+.dt{display:flex;gap:5px}
+.dt i{width:.85em;height:.85em;border-radius:50%;background:var(--m)}
+.dt i.no{background:#E2563F}
+.s.on .dt i{animation:pop .35s calc(var(--i)*.045s + .4s) backwards}
+@keyframes pop{from{opacity:0;transform:scale(.2)}}
+.ref{font-size:.8em;display:grid;gap:1.3vh}
+.ref p{border-left:4px solid var(--m);padding-left:1em;max-width:none}
+.ref p:nth-child(2n){border-color:var(--b)}
+.gl{background:radial-gradient(44vw 44vw at 96% 4%,rgba(50,153,255,.5),transparent 70%),radial-gradient(38vw 38vw at 0 100%,rgba(0,208,158,.38),transparent 70%),#0B2239}
+.gl2{background:radial-gradient(44vw 44vw at 4% 0,rgba(0,208,158,.38),transparent 70%),radial-gradient(44vw 44vw at 100% 100%,rgba(50,153,255,.5),transparent 70%),#0B2239}
+#bar{position:fixed;top:env(safe-area-inset-top,0px);left:0;height:5px;background:linear-gradient(90deg,var(--m),var(--b));transition:width .5s;z-index:7}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;align-items:center;gap:1rem;padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));z-index:6;font-size:.85rem}
+nav button{width:44px;height:44px;border-radius:50%;border:1px solid #DCE7EF;background:#fff;color:#0B2239;font-size:1.4rem;cursor:pointer;box-shadow:0 4px 14px rgba(11,34,57,.15)}
+nav button:hover{border-color:var(--m)}
+button:focus-visible{outline:3px solid var(--b);outline-offset:2px}
+#ct{background:#fff;color:#0B2239;padding:.3em .9em;border-radius:99px;box-shadow:0 4px 14px rgba(11,34,57,.15)}
+@media(max-width:700px){.two,.pad,.grp{grid-template-columns:1fr}.n::after{display:none}.s{padding:12vh 6vw 14vh}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<div id="lg"><img src="data:image/png;base64,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" alt="Logo do IFRN"></div>
+<main class="deck" id="dk"></main>
+<nav><button id="pv" aria-label="Slide anterior">‹</button><span id="ct"></span><button id="nx" aria-label="Próximo slide">›</button></nav>
+<script>
+const H=d=>'<header><h2 class="r">'+d.h+'</h2>'+(d.s?'<p class="sb r">'+d.s+'</p>':'')+'</header>';
+const B=x=>'<div class="bd">'+x+'</div>';
+const L=a=>'<ul class="l">'+a.map(t=>'<li class="r">'+t+'</li>').join('')+'</ul>';
+const T={
+cover:d=>B('<p class="kk r">Apresentação de TCC</p><h1 class="r">'+d.t+'</h1><div class="bar r"></div><p class="r"><b>Aluno:</b> '+d.a+'<br><b>Orientador:</b> '+d.o+'</p>'),
+toc:d=>H(d)+B('<div class="toc">'+d.i.map((t,k)=>'<div class="r"><b>0'+(k+1)+'</b>'+t+'</div>').join('')+'</div>'),
+ul:d=>H(d)+B(L(d.i)),
+q:d=>H(d)+B('<p class="q r">'+d.q+'</p>'),
+cards:d=>H(d)+B('<div class="cards">'+d.c.map((c,k)=>'<div class="c r">'+(d.n?'<div class="nm">'+(d.n===2?'abc'[k]:k+1)+'</div>':'')+'<h3>'+c[0]+'</h3>'+(Array.isArray(c[1])?'<ul class="mi">'+c[1].map(x=>'<li>'+x+'</li>').join('')+'</ul>':'<p>'+c[1]+'</p>')+'</div>').join('')+'</div>'),
+tech:d=>H(d)+B(d.g.map(g=>'<div class="grp r"><span>'+g[0]+'</span><div class="ch">'+g[1].map(x=>'<i>'+x+'</i>').join('')+'</div></div>').join('')),
+flow:d=>H(d)+B('<div class="flow">'+d.n.map((n,k)=>'<div class="n r'+(k==3?' mo':'')+'" style="--i:'+k+'"><b>'+n[0]+'</b>'+n[1]+'</div>').join('')+'</div><div class="lg r"><span><i style="background:var(--b)"></i>só o modelo interpreta e devolve JSON</span><span><i style="background:var(--m)"></i>o backend valida e executa pelas APIs, com OAuth 2.0</span></div><p class="mut r">'+d.f+'</p>'),
+st:d=>H(d)+B('<div class="st">'+d.c.map(c=>'<div class="r"><h3>'+c[0]+'</h3><p>'+c[1]+'</p></div>').join('')+'</div>'),
+val:d=>H(d)+B('<div class="two"><ul class="chk">'+d.i.map(t=>'<li class="r">'+t+'</li>').join('')+'</ul><div class="c r"><p>Comando</p><h3>“Agende reunião dia 30 de fevereiro às 10h”</h3><span class="stop">Rejeitado antes de chamar a API</span><p style="margin-top:1vh">Nas 3 execuções.</p></div></div>'),
+ch:d=>H(d)+B('<div class="ch r">'+d.c.map(x=>'<i>'+x+'</i>').join('')+'</div><p class="mut r">'+d.f+'</p>'),
+res:d=>H(d)+B('<div class="pad"><div class="r"><div class="big"><span id="cnt">37</span><small>/39</small></div><p>execuções corresponderam ao esperado, 94,9%.</p></div><div class="grid" id="gr"></div></div>'),
+ref:d=>H(d)+B('<div class="ref">'+d.r.map(t=>'<p class="r">'+t+'</p>').join('')+'</div>'),
+end:d=>B('<h1 class="r">Obrigado pela atenção!</h1><div class="bar r"></div><p class="r mut">Asaph Bonifácio Guimarães Arruda · Perguntas?</p>')
+};
+const D=[
+{y:'cover',th:'d hero',t:'James: um assistente pessoal baseado em modelos de linguagem para o gerenciamento de agenda e e-mail',a:'Asaph Bonifácio Guimarães Arruda',o:'Prof. Dr. Robinson Luis de Souza Alves'},
+{y:'ul',h:'Introdução',s:'Contextualização',i:['Assistentes virtuais evoluíram com a IA e o processamento de linguagem natural (Todericiu, 2025)','Siri, Alexa e Google Assistant ainda falham em solicitações complexas (Guan et al., 2023)','Modelos de linguagem tornam os assistentes mais flexíveis, mas podem alucinar','Por isso os dados precisam ser validados antes de acionar serviços externos']},
+{y:'q',th:'d gl',h:'Introdução',s:'Problema de pesquisa',q:'Em que medida o James produz o comportamento esperado diante de comandos de agenda e e-mail em português, inclusive quando faltam informações ou há mais de uma interpretação possível?'},
+{y:'flow',h:'Arquitetura do projeto',s:'Organização em camadas',n:[['Interface','Next.js, texto ou voz'],['Backend','Node.js, sessão'],['Contexto','agenda, e-mail ou web'],['Modelo','OpenRouter e Gemini'],['Validação','regras no backend'],['Serviços','Calendar, Gmail, Search']],f:'TypeScript, PostgreSQL e Docker. Integração direta com as APIs, sem MCP: regras e permissões ficam sob controle da aplicação.'},
+{y:'cards',th:'d gl2',h:'Fundamentação teórica',c:[['IA generativa e LLMs','Geram conteúdo a partir de padrões em grandes volumes de dados e podem alucinar (Håkansson; Phillips-Wren, 2024).'],['Linguagem natural','Permite interpretar pedidos do dia a dia, sem comandos rígidos (Todericiu, 2025).'],['Reconhecimento de fala','Converte voz em texto; variações de pronúncia afetam a transcrição (Benzeghiba et al., 2007).'],['APIs e MCP','APIs ligam o modelo aos serviços; o MCP padroniza, mas traz desafios de segurança (Hou et al., 2026).']]},
+{y:'st',h:'Desenvolvimento',s:'Como o James processa um comando',c:[['Comando','Texto ou voz, transcrita pelo navegador.'],['Contexto','Palavras-chave definem o domínio e as orientações.'],['Modelo','Devolve a intenção e os dados em JSON.'],['Validação','O backend confere formato, campos e datas.'],['Execução','Chama o Google Calendar ou o Gmail.']]},
+{y:'val',th:'d gl',h:'Desenvolvimento',s:'Validação no backend',i:['A resposta é um JSON válido, em forma de objeto','A intenção pertence ao conjunto permitido','Título, data (AAAA-MM-DD) e horário (HH:mm) presentes','A data existe no calendário']},
+{y:'cards',h:'Metodologia',s:'Como avaliamos',c:[['Pesquisa aplicada','Desenvolvimento incremental e testes funcionais, com análise qualitativa das falhas.'],['13 comandos, 3 execuções cada','Um comando por categoria, digitados e falados: 39 execuções no total.'],['Critério de acerto','O efeito observado coincide com o esperado, conferido no Calendar e no Gmail.']]},
+{y:'res',th:'d gl2',h:'Resultados obtidos',s:'Visão geral'},
+{y:'cards',h:'Resultados obtidos',s:'Divergências e acertos',c:[['“Sexta que vem”','Retornou 13/11 em uma tentativa e 20/11, a data esperada, nas outras duas.'],['Reunião sem horário','Em uma execução, o James assumiu um horário que o usuário não informou.'],['Data inexistente','30 de fevereiro rejeitado nas 3 execuções, antes de chamar a API.'],['Instrução em e-mail','“Apague todos os eventos” não foi executada, no cenário testado.']]},
+{y:'ul',th:'d gl',h:'Conclusão',i:['37 de 39 execuções corresponderam ao esperado (94,9%)','Separar interpretação (modelo) e validação (backend) permitiu rejeitar uma data inexistente','As falhas surgiram quando o dado era ambíguo ou estava ausente']},
+{y:'cards',h:'Limitações e próximos passos',c:[['Limitações',['13 comandos criados pelo autor','Um só modelo, gratuito','Texto e voz contados juntos','E-mails enviados a provedor externo']],['Próximos passos',['Tratar dado ausente como nulo e pedir esclarecimento','Confirmar data e horário antes de agir','Consulta de eventos e eventos recorrentes','Comparar texto e voz, outros modelos e mais usuários']]]},
+{y:'ref',h:'Referências',r:['BENZEGHIBA, M. et al. Automatic speech recognition and speech variability: a review. Speech Communication, v. 49, 2007.','GUAN, Y. et al. Intelligent Virtual Assistants with LLM-based Process Automation. arXiv:2312.06677, 2023.','HÅKANSSON, A.; PHILLIPS-WREN, G. Generative AI and Large Language Models. Procedia Computer Science, v. 246, 2024.','HARDT, D. (ed.). The OAuth 2.0 Authorization Framework. RFC 6749. IETF, 2012.','HOU, X. et al. Model Context Protocol (MCP): landscape, security threats, and future research directions. ACM TOSEM, v. 35, n. 10, 2026.','RADFORD, A. et al. Robust Speech Recognition via Large-Scale Weak Supervision. arXiv:2212.04356, 2022.','TODERICIU, I. A. Virtual Assistants: a review of the next frontier in AI interaction. Acta Universitatis Sapientiae, Informatica, v. 17, 2025.','Documentação oficial: Next.js, Node.js, TypeScript, PostgreSQL, OpenRouter, Google (Calendar, Gmail, Search grounding) e MDN. Referências completas no TCC.']},
+{y:'end',th:'d hero'}
+];
+const dk=document.getElementById('dk');
+dk.innerHTML=D.map((d,k)=>'<section class="s '+(d.th||'')+(k?'':' on')+'"'+(d.y==='res'?' data-c="1"':'')+'>'+T[d.y](d)+'</section>').join('');
+const S=[...dk.children],bar=document.getElementById('bar'),ct=document.getElementById('ct');
+S.forEach(s=>[...s.querySelectorAll('.r')].forEach((e,k)=>e.style.setProperty('--i',k)));
+const G=[["Criar",3],["Data relativa",2],["Informal ou com erro",3],["Editar",3],["Cancelar",3],["Alerta",3],["Incompleto",2],["Ambíguo",3],["Data inválida",3],["E-mail",3],["Web",3],["Fora do escopo",3],["Segurança",3]];
+document.getElementById('gr').innerHTML=G.map(([n,h],k)=>'<div class="row r"><span>'+n+'</span><span class="dt">'+[0,1,2].map(j=>'<i class="'+(j<h?'ok':'no')+'" style="--i:'+(k*3+j)+'"></i>').join('')+'</span></div>').join('');
+let i=0;
+function count(){
+  const e=document.getElementById('cnt'),t=37;
+  if(matchMedia('(prefers-reduced-motion:reduce)').matches){e.textContent=t;return}
+  let s=null;(function f(ts){s=s||ts;const p=Math.min((ts-s)/1200,1);e.textContent=Math.round(t*p);if(p<1)requestAnimationFrame(f)})(performance.now());
+}
+function go(n,q){
+  n=Math.max(0,Math.min(S.length-1,n));
+  S.forEach((s,k)=>{s.classList.toggle('on',k===n);s.classList.toggle('out',k<n)});
+  i=n;bar.style.width=((n+1)/S.length*100)+'%';ct.textContent=(n+1)+' / '+S.length;
+  if(!q){try{history.replaceState(null,'','#s'+(n+1))}catch(e){}}
+  if(S[n].dataset.c)count();
+}
+document.getElementById('nx').onclick=()=>go(i+1);
+document.getElementById('pv').onclick=()=>go(i-1);
+addEventListener('keydown',e=>{
+  if(['ArrowRight','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();go(i+1)}
+  else if(['ArrowLeft','PageUp','Backspace'].includes(e.key)){e.preventDefault();go(i-1)}
+  else if(e.key==='Home')go(0);else if(e.key==='End')go(S.length-1);
+  else if(e.key==='f'||e.key==='F'){try{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}catch(x){}}
+});
+let x0=null;
+addEventListener('touchstart',e=>{x0=e.touches[0].clientX},{passive:true});
+addEventListener('touchend',e=>{if(x0===null)return;const d=e.changedTouches[0].clientX-x0;if(Math.abs(d)>50)go(i+(d<0?1:-1));x0=null});
+const m=/^#s(\d+)$/.exec(location.hash);go(m?parseInt(m[1],10)-1:0,true);
+addEventListener('hashchange',()=>{const h=/^#s(\d+)$/.exec(location.hash);if(h)go(parseInt(h[1],10)-1,true)});
+</script>
+</body>
+</html>
