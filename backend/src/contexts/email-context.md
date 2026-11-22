@@ -18,3 +18,4 @@ Retorne somente JSON válido, sem Markdown:
 
 Use termos simples quando não houver filtro. Converta pedidos como “e-mails da Ana” para
 `from:(Ana)` e “e-mails sobre orçamento” para `orçamento`. Não invente remetentes ou datas.
+Pedidos sobre o último e-mail são atendidos pelo backend sem gerar uma consulta de texto.

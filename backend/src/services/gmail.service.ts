@@ -12,6 +12,7 @@ interface GmailPart {
 interface GmailMessageResponse {
   id: string;
   threadId: string;
+  internalDate?: string;
   snippet?: string;
   payload?: GmailPart & { headers?: Array<{ name?: string; value?: string }> };
 }
@@ -26,11 +27,17 @@ export class GmailService {
         headers: { Authorization: `Bearer ${token}` }, params: { q: query, maxResults }, timeout: 10000,
       });
       const messages = await Promise.all((list.data.messages ?? []).map(this.getMessage.bind(this, token)));
+      messages.sort(function newestFirst(first, second) { return (second.internalDate ?? 0) - (first.internalDate ?? 0); });
       return { messages, resultSizeEstimate: list.data.resultSizeEstimate ?? messages.length };
     } catch (error) {
       if (axios.isAxiosError(error)) this.throwGoogleError(error.response?.status);
       throw error;
     }
+  }
+
+  public async latest(userId: string, direction: 'received' | 'sent' = 'received'): Promise<EmailSearchResult> {
+    const result = await this.search(userId, direction === 'sent' ? 'in:sent' : 'in:inbox', 10);
+    return { messages: result.messages.slice(0, 1), resultSizeEstimate: result.resultSizeEstimate };
   }
 
   private async getMessage(token: string, message: { id: string; threadId: string }): Promise<EmailMessage> {
@@ -41,7 +48,10 @@ export class GmailService {
           params: { format: 'full' }, timeout: 10000,
         });
       const headers = response.data.payload?.headers ?? [];
-      return { id: response.data.id, threadId: response.data.threadId, subject: this.header(headers, 'Subject') || '(sem assunto)',
+      return { id: response.data.id, threadId: response.data.threadId,
+        ...(response.data.internalDate && Number.isFinite(Number(response.data.internalDate))
+          ? { internalDate: Number(response.data.internalDate) } : {}),
+        subject: this.header(headers, 'Subject') || '(sem assunto)',
         from: this.header(headers, 'From') || '(remetente não informado)', date: this.header(headers, 'Date') || '',
         snippet: response.data.snippet ?? '', content: this.messageContent(response.data.payload) || response.data.snippet || '' };
     } catch (error) {

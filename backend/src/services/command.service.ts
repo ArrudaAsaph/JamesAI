@@ -22,9 +22,11 @@ export class CommandService {
   public async execute(userId: string, text: string): Promise<CommandResult> {
     const command = text.trim();
     if (!command || command.length > 4000) throw new CommandError(400, 'INVALID_COMMAND', 'Envie um comando com até 4.000 caracteres.');
+    if (this.isMeaningOfLifeQuestion(command)) return { text: command, context: null, interpretation: null,
+      action: 'not_understood', message: 'Não existe uma resposta única para o sentido da vida. Muitas pessoas encontram significado nas relações, no aprendizado, na criação e em contribuir com algo que consideram importante.' };
     const context = await this.context.findPrompt(command);
     if (!context) return { text: command, context: null, interpretation: null, action: 'not_understood',
-      message: 'Posso cuidar da sua agenda, buscar e-mails ou pesquisar na web com o Google.' };
+      message: 'Ainda não consigo responder a esse tema sem consultar um serviço. Posso ajudar com sua agenda, resumir e-mails ou pesquisar informações atuais na web.' };
     if (context.id === 'email') return this.searchEmails(userId, command, context.prompt);
     if (context.id === 'web') {
       const result = await this.webSearch.search(command);
@@ -73,29 +75,38 @@ export class CommandService {
   }
 
   private async searchEmails(userId: string, text: string, prompt: string): Promise<CommandResult> {
-    const interpretation = await this.ai.interpretEmail(prompt);
-    const result = await this.gmail.search(userId, interpretation.query, 10);
+    const latestDirection = this.latestEmailDirection(text);
+    const result = latestDirection
+      ? await this.gmail.latest(userId, latestDirection)
+      : await this.gmail.search(userId, (await this.ai.interpretEmail(prompt)).query, 10);
     const displayed = result.messages.slice(0, 5);
-    let summaries = new Map<string, string>();
-    try { summaries = await this.ai.summarizeEmails(displayed); }
-    catch {
-      summaries = new Map(displayed.map(function fallback(email) {
-        const preview = (email.content || email.snippet).replace(/\s+/g, ' ').trim().slice(0, 220);
-        return [email.id, preview || 'Não foi possível ler o conteúdo desta mensagem.'];
-      }));
-    }
+    const summaries = await this.ai.summarizeEmails(displayed);
     const details = displayed.map(function label(email) {
       return `• ${email.subject} — ${email.from}\n  Sobre: ${summaries.get(email.id) ?? 'Resumo indisponível.'}`;
     }).join('\n');
     const emails = result.messages.map(function publicEmail(email) {
       const { content: _content, ...safeEmail } = email;
       const summary = summaries.get(email.id);
-      return { ...safeEmail, ...(summary ? { summary } : {}) };
+      const { internalDate: _internalDate, ...publicEmail } = safeEmail;
+      return { ...publicEmail, ...(summary ? { summary } : {}) };
     });
     return { text, context: { id: 'email' }, interpretation: null, action: 'searched', emails,
       message: result.messages.length
-        ? `Encontrei cerca de ${result.resultSizeEstimate} e-mail(s). Mostrando ${displayed.length}:\n${details}`
-        : 'Não encontrei e-mails para essa busca.' };
+        ? `Encontrei ${latestDirection ? 'o e-mail mais recente' : `cerca de ${result.resultSizeEstimate} e-mail(s)`}. Mostrando ${displayed.length}:\n${details}`
+        : latestDirection === 'sent' ? 'Não encontrei e-mails enviados.' : latestDirection === 'received'
+          ? 'Não encontrei e-mails na caixa de entrada.' : 'Não encontrei e-mails para essa busca.' };
+  }
+
+  private latestEmailDirection(text: string): 'received' | 'sent' | null {
+    const value = text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    if (!/\b(ultimo|ultima|mais recente)\b/.test(value) || !/\b(e-?mail|mensagem)\b/.test(value)) return null;
+    if (/\b(enviei|enviado|enviada|mandei|envio)\b/.test(value)) return 'sent';
+    return 'received';
+  }
+
+  private isMeaningOfLifeQuestion(text: string): boolean {
+    const value = text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    return /\bsentido da vida\b/.test(value);
   }
 
   private async targetEvent(userId: string, interpretation: CalendarInterpretation): Promise<CalendarEvent> {

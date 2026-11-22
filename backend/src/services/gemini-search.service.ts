@@ -59,6 +59,9 @@ export class GeminiSearchService {
         } catch { /* Ignore malformed citation URLs. */ }
       }
     }
-    return { answer, sources: Array.from(sources.values()).slice(0, 6) };
+    const citations = Array.from(sources.values()).slice(0, 6);
+    if (!citations.length) throw new CommandError(502, 'GEMINI_NO_SOURCES',
+      'A busca não retornou fontes verificáveis. Tente novamente.');
+    return { answer, sources: citations };
   }
 }

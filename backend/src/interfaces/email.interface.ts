@@ -4,6 +4,7 @@ export interface EmailMessage {
   subject: string;
   from: string;
   date: string;
+  internalDate?: number;
   snippet: string;
   content: string;
   summary?: string;
